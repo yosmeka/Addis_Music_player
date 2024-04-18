@@ -3,15 +3,19 @@ import Music from '../models/music.model.js'
 export const createMusic = async (req, res, next) => {
     try {
         console.log(req.body)
-        const { title, artist, album, categories } = req.body;
+        let { title, artist, album, categories } = req.body;
         const {image, music} = req.files;
-        categories = JSON.parse()
-
+        categories = JSON.parse(categories);
+        categories.map(
+            category => category.trim().toLowerCase()
+        );
+        console.log(categories);
+        
         const newMusic = await Music.create({
             title,
             artist,
             album,
-            categories,
+            categories: categories,
             'coverImg.url': image[0].filename,
             'audio.url': music[0].filename,
         });

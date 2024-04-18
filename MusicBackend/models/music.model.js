@@ -14,6 +14,12 @@ const MusicSchema = new mongoose.Schema({
   },
   categories: {
     type: [String],
+    validate: {
+      validator: categories => {
+        const allCategories = ['hiphop', 'jazz', 'slow', 'rock', 'sad', 'happy'];
+        return categories.filter(category => !allCategories.includes(category.toLowerCase())).length === 0;
+      }
+    }
   },
   coverImg: {
     url: {
@@ -26,12 +32,15 @@ const MusicSchema = new mongoose.Schema({
         required: true,
     }
   },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  },
 }, {
     timestamps: true,
+});
+
+MusicSchema.pre('save', function(next) {
+  console.log('1', this.categories);
+  this.categories = [...new Set(this.categories)];
+  console.log('2', this.categories);
+  next();
 });
 
 const Music = mongoose.model('Music', MusicSchema);
