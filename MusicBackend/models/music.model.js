@@ -6,7 +6,8 @@ const MusicSchema = new mongoose.Schema({
     required: true,
   },
   artist: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artist',
     required: true,
   },
   album: {
@@ -24,12 +25,19 @@ const MusicSchema = new mongoose.Schema({
   coverImg: {
     url: {
         type: String,
+    },
+    path: {
+      type: String,
     }
   },
   audio: {
     url: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
+    },
+    path: {
+      type: String,
+      required: true,
     }
   },
 }, {
@@ -37,9 +45,7 @@ const MusicSchema = new mongoose.Schema({
 });
 
 MusicSchema.pre('save', function(next) {
-  console.log('1', this.categories);
   this.categories = [...new Set(this.categories)];
-  console.log('2', this.categories);
   next();
 });
 
