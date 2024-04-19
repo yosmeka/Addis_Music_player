@@ -6,11 +6,12 @@ import Artist from '../models/artist.model.js';
 
 export const createMusic = async (req, res, next) => {
     try {
-        if (req.role !== 'admin')
+        if (req.role !== 'admin') 
             return res.status(403).json(createError('Unauthorized!'));
 
         let { title, artist, album, categories } = req.body;
         const {image, music} = req.files;
+        
         categories = JSON.parse(categories);
         categories.map(
             category => category.trim().toLowerCase()
@@ -19,7 +20,7 @@ export const createMusic = async (req, res, next) => {
         if (!music)
             res.status(400).json(createError('Music is required'));
 
-        if (!await Artist.exists({id: artist}))
+        if (!await Artist.exists({_id: artist}))
             return res.status(400).json(createError('Artist Doesn\'t exist'))
         
         let files = {
@@ -140,7 +141,7 @@ export const deleteMusic = async (req, res, next) => {
         if (existsSync(music.audio.path))
             await unlink(music.audio.path);
         if (music.coverImg.path && existsSync(music.coverImg.path)) await unlink(music.coverImg.path);
-        console.log(await Music.deleteOne({_id: music._id}));
+        await Music.deleteOne({_id: music._id});
         return res.status(200).json({message: 'Successfully deleted!'});
     } catch (error) {
       next(error)  

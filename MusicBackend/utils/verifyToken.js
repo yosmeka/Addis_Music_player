@@ -10,12 +10,11 @@ export const verifyToken = (req, res, next) => {
         
         jwt.verify(token, process.env.JWT_ACCESS_TOKEN, (err, decoded) => {
             if (err) {
-            return res.status(401).json({ message: 'Invalid token' });
-            }
-            if (req.params.id !== decoded.user)
                 return res.status(401).json({ message: 'Invalid token' });
+            }
 
             req.user = decoded.user;
+            req.role = decoded.role;
             next();
         });
     } catch(error) {

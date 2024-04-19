@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import User, { PlayList } from '../models/user.model.js';
+import User from '../models/user.model.js';
 
 import { createError, createSuccess } from "../utils/messages.js";
 import { generateToken, refresh } from "../utils/generateTokens.js";
@@ -19,8 +19,10 @@ export const register = async (req, res, next) => {
     const newUser = new User({
       ...req.body,
       password: hash,
+      playlists: []
     });
     
+    console.log('efefe', newUser)
     const tokens = generateToken(newUser);
     Token.create({refreshtoken: tokens.refreshToken})
     
@@ -58,7 +60,7 @@ export const login = async (req, res, next) => {
 export const refreshToken = async (req, res, next) => {
   try {
     const refreshToken = req.body.refreshtoken;
-
+    console.log(refreshToken);
     if (!refreshToken)
       return res.status(400).send(createError(400, 'Not autheniticated'));
 
@@ -119,29 +121,33 @@ export const createPlayList = async (req, res, next) => {
       const music = Music.findById(musicid);
       if (!music)
         return res.status(400).send(createError('Music not found'));
-
+      let duplicate = false
       playlists.map(playlist=>{
         if (playlist.title === title) {
           playlist.musics.push(musicid);
+          const prevlength = playlist.musics.length;
           let check = new Set();
           playlist.musics.forEach(music => {
             check.add(music.toString())
           })
           playlist.musics = [...check];
+          duplicate = playlist.musics.length<prevlength;
         }
         return playlist;
       });
+      if (duplicate)
+        return res.status(400).send(createError('Already in playlist'));
     }
     user.playlists = playlists;
     user.save();
     const playlist = playlists.filter(playlist=>playlist.title === title)[0]
     
-    await user.populate(
-      {
-        path: 'playlists.musics',
+    await user.populate({
+      path: 'playlists.musics',
+      populate: {
+        path: 'artist'
       }
-    );
-    
+    });
     return res.status(201).json(createSuccess('Successfully added', playlist));
   } catch (error) {
     next(error)
@@ -152,7 +158,12 @@ export const allPlaylists = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).select(['playlists']);
     const playlists = user.playlists;
-    await user.populate('playlists.musics');
+    await user.populate({
+      path: 'playlists.musics',
+      populate: {
+        path: 'artist'
+      }
+    });
     
     return res.status(200).json(createSuccess("Successfully fetched", playlists));
   } catch(err) {
@@ -176,7 +187,12 @@ export const removeFromPlaylist = async (req, res, next) => {
     });
     user.save();
     const playlist = user.playlists.filter(playlist=>playlist.title === title);
-    await user.populate('playlists.musics');
+    await user.populate({
+      path: 'playlists.musics',
+      populate: {
+        path: 'artist'
+      }
+    });
     
     return res.status(200).json(createSuccess("Successfully deleted", playlist[0]));
   } catch(err) {
@@ -193,7 +209,12 @@ export const singlePlayList = async (req, res, next) => {
     if (playlist.length === 0)
       return res.status(400).json(createError('Playlist not found'));
 
-    await user.populate('playlists.musics');
+    await user.populate({
+      path: 'playlists.musics',
+      populate: {
+        path: 'artist'
+      }
+    });
     return res.status(200).json(createSuccess("Successfully fetched", playlist[0]));
   } catch (err) {
     next(err);
@@ -212,7 +233,12 @@ export const deletePlayList = async (req, res, next) => {
 
     user.playlists = playlists;
     user.save();
-    await user.populate('playlists.musics');
+    await user.populate({
+      path: 'playlists.musics',
+      populate: {
+        path: 'artist'
+      }
+    });
     return res.status(200).json(createSuccess("Successfully deleted", playlists));
   } catch(err) {
     next(err);

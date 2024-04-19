@@ -6,14 +6,15 @@ import {
     singleMusic,
     updateMusic, 
 } from '../controllers/music.controllers.js';
+import {verifyToken} from '../utils/verifyToken.js';
 
 const router = express.Router();
 
 // Create Music
-router.post('/', createMusic);
+router.post('/',verifyToken, createMusic);
 router.get('/', allMusics);
 router.get('/:id', singleMusic);
-router.patch('/:id', updateMusic);
-router.delete('/:id', deleteMusic);
+router.patch('/:id',verifyToken, updateMusic);
+router.delete('/:id',verifyToken, deleteMusic);
 
 export default router;

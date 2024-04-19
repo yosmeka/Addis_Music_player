@@ -3,8 +3,6 @@ import mongoose from 'mongoose';
 export const PlayList = new mongoose.Schema({
     title: {
         type: String,
-        required: true,
-        unique: true
     },
     musics: [
         {
@@ -23,9 +21,9 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
         validate: {
-            validator: email => {
-                const emaiRegex = new RegExp('^[^\s@]+@[^\s@]+\.[^\s@]+$')
-                return emaiRegex.test(email)
+            validator: email => {    
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email)
             },
             message: email => 'Invalid email format'
         }

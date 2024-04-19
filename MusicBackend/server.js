@@ -37,7 +37,7 @@ app.use("/api/user", userRoute);
 app.use("/api/artist", uploader.single('image'), artistRoute);
 
 app.use((err, req, res, next) => {
-  console.log('HERE');
+  console.log(err);
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong!";
   return res.status(errorStatus).json({
