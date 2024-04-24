@@ -6,7 +6,7 @@ import artistRoute from './routes/aritst.routes.js';
 import connectToDatabase from './config/db.js';
 import multer from "multer";
 import { filtering, file_name, destination_name  } from "./utils/file_processing.js";
-import cookieParser from "cookie-parser";
+import cors from 'cors'
 
 dotenv.config();
 const __dirname = import.meta.dirname
@@ -16,9 +16,9 @@ const port = process.env.PORT || 8000
 
 connectToDatabase();
 
+app.use(cors());
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
-app.use(cookieParser());
 app.use(express.static('uploads'));
 app.use('/images', express.static('images'));
 app.use('/musics', express.static('muiscs'));

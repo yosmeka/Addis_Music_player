@@ -3,6 +3,8 @@ import { Box, Card, Image, Heading, Text, Flex } from 'rebass'
 import { css } from "@emotion/react";
 import styled from '@emotion/styled'
 import { FaPlay } from 'react-icons/fa6'
+import { useDispatch } from "react-redux";
+import { play } from "../redux/slices/currentMusicSlice";
 
 const cardStyle = css`
     border-radius: 8px;
@@ -64,7 +66,8 @@ const blurStyle = css`
 `
 
 const MusicCard = ( {hotMusic, imageUrl} ) => {
-    
+    const dispatch = useDispatch();
+
     return <Card
             display='flex'
             flexDirection='column'
@@ -85,7 +88,7 @@ const MusicCard = ( {hotMusic, imageUrl} ) => {
             }}>
 
                 {hotMusic && <Box css={blurStyle} />}
-                <PlayButton />
+                <PlayButton onClick={() => dispatch(play({audio: 'there'}))}/>
                 <Heading as='h3' my={1}>
                     Nice Music
                 </Heading>

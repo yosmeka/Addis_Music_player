@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 export const PlayList = new mongoose.Schema({
     title: {
         type: String,
+        unique: true
     },
     musics: [
         {
@@ -11,7 +12,6 @@ export const PlayList = new mongoose.Schema({
         }
     ]
 });
-
 
 
 const UserSchema = new mongoose.Schema({
@@ -29,7 +29,6 @@ const UserSchema = new mongoose.Schema({
         }
     },
     password: {
-        required: true,
         type: String,
     },
     role: {
@@ -37,7 +36,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         enum: ['client', 'admin']
     },
-    playlists: [PlayList]
+    playlists: [{
+        type: PlayList,
+        required: false
+    }]
 }, {
     timestamps: true,
 });

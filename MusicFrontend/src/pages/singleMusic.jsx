@@ -1,5 +1,6 @@
 import { css } from "@emotion/react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from 'react-router-dom';
 import { Flex, Image, Heading, Text, Button } from "rebass";
 
 const singleMusicStyle = css`
@@ -13,7 +14,6 @@ const singleMusicStyle = css`
 `
 
 const imageStyle = css`
-
     width: 40%;
     height: 100%;
     border-bottom-left-radius: 5%;
@@ -28,9 +28,22 @@ const infoStyle = css`
     gap: 5px;
 `
 
-const SingleMusic = () => {
+const fetchMusic = async (id) => {
+    const res = await fetch("http://localhost:3000/api/music/66227421c6df342cd1748ef6");
+    console.log(res);
+    const data = await res.json();
+    console.log(data);
 
-    return <Flex css={singleMusicStyle}>
+}
+const SingleMusic = () => {
+    const { id }= useParams();
+    const navigate = useNavigate();
+    console.log(navigate)
+    useEffect(() => {
+        fetchMusic();
+    }, []);
+
+    return <Flex css={singleMusicStyle} onClick={() => navigate(-1)}>
         <Flex backgroundColor='#171719' margin='auto' height='60%' width='70%'>
             <Image src="images/download.jpg" css={imageStyle}/>
             <Flex flexDirection='column' padding={15} width={1} css={infoStyle}>

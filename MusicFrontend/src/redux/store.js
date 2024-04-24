@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import cakeReducer from '../features/cake/cakeSlice'
+import crrentMusicReducer from './slices/currentMusicSlice'
 
 const store = configureStore({
   reducer: {
-    cake: cakeReducer,
+    currentMusic: crrentMusicReducer
   }
 })
 

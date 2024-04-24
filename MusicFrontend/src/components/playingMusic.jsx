@@ -5,6 +5,8 @@ import {FaPlay,  FaPause, FaForwardFast, FaBackwardFast, FaX, FaVolumeXmark, FaV
 import { ImLoop } from "react-icons/im";
 import styled from '@emotion/styled';
 import StyledIcon from './icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { loop, play } from '../redux/slices/currentMusicSlice';
 
 
 const style = css`
@@ -124,9 +126,9 @@ const PlayingMusic = () => {
     const [range, setRange] = useState(0);
     const [playing, setPlaying] = useState(true);
     const [duration, setDuration] = useState(0);
-    const [loop, setLoop] = useState(false);
-    const [volume, setVolume] = useState(90)
-    
+    const [volume, setVolume] = useState(90);
+    const currentMusic = useSelector(state => state.currentMusic);
+    const dispatch = useDispatch();
     
     const onTimeUpdated = (event) => {
         let currentTime = event.target.currentTime;
@@ -141,10 +143,10 @@ const PlayingMusic = () => {
     
     return <Flex width={1} height={80} paddingX={3} paddingBottom={2} paddingTop={3} backgroundColor='#1F1F22' css={style} justifyContent={'space-between'}>
         <Flex width={250}>
-            <Image width={64} src='images/download.jpg'/>
+            <Image width={64} src={currentMusic.music.image}/>
             <Flex flexDirection='column' paddingLeft={2}>
-                <Text fontSize={15} mb={1}> The Nice Song </Text>
-                <Text fontSize={10} color='#FCFCFC77'> The Artist Name </Text>
+                <Text fontSize={15} mb={1}> {currentMusic.music.title} </Text>
+                <Text fontSize={10} color='#FCFCFC77'> {currentMusic.music.artist.name} </Text>
             </Flex>
         </Flex>
         <Flex paddingLeft={10}>
@@ -156,9 +158,9 @@ const PlayingMusic = () => {
                     <FaPause onClick={async () => {await audioRef.current.pause(); setPlaying(true)}}/>  
                 }
                 <FaForwardFast onClick={() => {setRange(range+10); audioRef.current.currentTime = duration*(range+10)/100}}/>
-                <StyledIcon icon={ImLoop} color={loop && '#00FFFF'} onClick={()=>{
+                <StyledIcon icon={ImLoop} color={currentMusic.loop && '#00FFFF'} onClick={()=>{
                     audioRef.current.loop = !loop;
-                    setLoop(!loop);
+                    dispatch(loop);
                 }}/>
                 <Flex alignItems='center'>
                     <StyledIcon icon={volume==0?FaVolumeXmark:FaVolumeHigh} margin={2.5} />
@@ -175,12 +177,12 @@ const PlayingMusic = () => {
             onChange={(e) => audioRef.current.currentTime = duration*e.target.value/100}/>
         <audio 
             ref={audioRef} 
-            src="musics/music.mp3" 
+            src={currentMusic.music.audio} 
             onLoadedMetadata={(e) => setDuration(e.target.duration)} 
             onTimeUpdate={onTimeUpdated}
             onEnded={() => setPlaying(true)}
         ></audio>
-        <FaX />
+        <FaX onClick={() => dispatch(play(null))}/>
 
     </Flex>
 }

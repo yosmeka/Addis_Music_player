@@ -5,7 +5,7 @@ import {
     Heading,
     Box,
   } from 'rebass'
-import MusicCard from './musicCard';
+import MusicCard from '../components/musicCard';
 import { FaAngleRight, FaAngleLeft } from 'react-icons/fa6';
 import styled from '@emotion/styled';
 
@@ -54,7 +54,7 @@ const scroll = function (element, by) {
   })
 }
 
-export function Contents() {
+export function Home() {
     const hotMusics = useRef(null);
     
     return (
