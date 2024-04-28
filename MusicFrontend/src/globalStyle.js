@@ -15,6 +15,7 @@ const globalStyles = css`
     color: #00FFFF;
   }
 
+  
 `;
 
 export default globalStyles;

@@ -30,15 +30,11 @@ const infoStyle = css`
 
 const fetchMusic = async (id) => {
     const res = await fetch("http://localhost:3000/api/music/66227421c6df342cd1748ef6");
-    console.log(res);
     const data = await res.json();
-    console.log(data);
-
 }
 const SingleMusic = () => {
     const { id }= useParams();
     const navigate = useNavigate();
-    console.log(navigate)
     useEffect(() => {
         fetchMusic();
     }, []);

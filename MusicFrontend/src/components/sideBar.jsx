@@ -6,9 +6,10 @@ import {
   css
 } from '@emotion/react';
 import { FaArrowLeft } from 'react-icons/fa6'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import { MdHouse, MdViewSidebar, MdFavorite, MdFeaturedPlayList, MdPerson, MdCategory } from 'react-icons/md'
 import StyledIcon from './icons';
+
 
 const boxStyle = css`
     transition: all 0.5s ease;
@@ -96,6 +97,7 @@ const Sidebar = () => {
           )}
         </Flex> 
       </Box>
+      <Outlet />
     </>
  
   );

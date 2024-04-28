@@ -22,12 +22,11 @@ export const register = async (req, res, next) => {
       playlists: []
     });
     
-    console.log('efefe', newUser)
     const tokens = generateToken(newUser);
     Token.create({refreshtoken: tokens.refreshToken})
     
     await newUser.save();
-    res.status(201).json(createSuccess('User has been created.', {...tokens, id: newUser._id}));
+    res.status(201).json(createSuccess('User has been created.', {...tokens, id: newUser._id, email: newUser.email}));
   } catch (err) {
     next(err);
   }
@@ -51,7 +50,7 @@ export const login = async (req, res, next) => {
     
     res
       .status(200)
-      .json(createSuccess("Login successful.", {...tokens, id: user._id}));
+      .json(createSuccess("Login successful.", {...tokens, id: user._id, email: user.email}));
   } catch (err) {
     next(err);
   }
