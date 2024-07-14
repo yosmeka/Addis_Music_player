@@ -6,10 +6,14 @@ const axiosInstance = axios.create({
 
 const refreshToken = async () => {
     const refreshtoken = localStorage.getItem('token') || '';
-    console.log(refreshtoken);
-    console.log(localStorage);
     return axiosInstance.post('user/refresh', {refreshtoken});
 }
+
+axiosInstance.interceptors.request.use(async (config) => {
+    const accesstoken = localStorage.getItem("accesstoken") || '';
+    config.headers['Authorization'] = `Bearer ${accesstoken}`;
+    return config;
+});
 
 axiosInstance.interceptors.response.use(
     (response) => response,
@@ -17,11 +21,10 @@ axiosInstance.interceptors.response.use(
         if (error.response && error.response.status == 401) {
             try {
                 const newToken = await refreshToken();
-                console.log('new: ', newToken.data.data)
                 axiosInstance.defaults.headers.common['Authorization'] = "Bearer "+newToken.data.data.accessToken;
                 const oldRequest = error.config;
-                oldRequest.headers["Authorization"] = "Bearer "+newToken.data.data.accessToken
-                return await axiosInstance(oldRequest);
+                oldRequest.headers["Authorization"] = "Bearer "+newToken.data.data.accessToken;
+                return await axios(oldRequest);
             } catch (error) {
                 return Promise.reject(error);
             }

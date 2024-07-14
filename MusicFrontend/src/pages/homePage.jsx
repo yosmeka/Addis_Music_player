@@ -14,6 +14,7 @@ import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserStart, logout, logoutSuccess } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
+import axios from "../axiosUtils.js";
 
 
 const hotMusicStyle = css`
@@ -59,8 +60,8 @@ const DropDown = styled('label')`
   display: flex;
   justify-content: space-around;
   background: #1F1F22;
-  font-size: 14px;
-  padding: 5px;
+  font-weight: bold;
+  padding: 0.7rem 1rem;
   border-radius: 2px;
   margin-left: auto;
   margin-bottom: 5px;
@@ -90,6 +91,7 @@ const CheckBox = styled('input')`
 `
 
 const ListItem = styled('ul')`
+  padding: 1rem;
   &:hover {
     background: #63676F;
     padding-left: 3px;
@@ -126,10 +128,6 @@ export function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!auth.user) {
-      const id = localStorage.getItem('id') || '';
-      dispatch(getUserStart(id));
-    }
     if (auth.loggedout) {
       setTimeout(() => {
         dispatch(logoutSuccess(false));
@@ -143,7 +141,7 @@ export function Home() {
                 <Box css={!auth.loggedout?notificationStyle:[notificationStyle, showNotification]}>Successfully Logged Out</Box>
                 <DropDown htmlFor='dropdown'>
                   <CheckBox type='checkbox' id='dropdown'/>
-                  <StyledIcon icon={MdOutlineAccountCircle} width={15} height={15}/> {auth.user? auth.user.email: 'Account'} 
+                  <StyledIcon icon={MdOutlineAccountCircle} width={15} margin={'0 5'} height={15}/> {auth?.user? auth.user.email: 'Account'} 
                   <Box css={ItemsStyle} className='items'>
                     <ListItem onClick={() => {
                       if (!auth.user)

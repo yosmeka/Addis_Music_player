@@ -10,22 +10,21 @@ import Music from "../models/music.model.js";
 
 export const register = async (req, res, next) => {
   try {
-    req.body.role = req.body.role || 'client';
+    const {email, password} = req.body;
 
     const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(req.body.password, salt);
+    const hash = bcrypt.hashSync(password, salt);
 
-    if (req.body.password.length < 7) return res.status(400).send(createError('Password too short'))
     const newUser = new User({
-      ...req.body,
+      email,
       password: hash,
       playlists: []
     });
     
     const tokens = generateToken(newUser);
-    Token.create({refreshtoken: tokens.refreshToken})
-    
+    await Token.create({refreshtoken: tokens.refreshToken})
     await newUser.save();
+    
     res.status(201).json(createSuccess('User has been created.', {...tokens, id: newUser._id, email: newUser.email}));
   } catch (err) {
     next(err);

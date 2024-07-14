@@ -4,14 +4,15 @@ const initialState = {
     authenticating: false,
     user: null,
     error: '',
-    loggedout: false,
 }
 
 const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        loginStart: (state, action) => {},
+        loginStart: (state, action) => {
+            state.authenticating = true;
+        },
         authSuccess: (state, action) => {
             state.authenticating = false;
             state.user = action.payload;
@@ -24,7 +25,6 @@ const authSlice = createSlice({
         },
         logout: (state, action) => {},
         logoutSuccess: (state, action) => {
-            state.loggedout = action.payload
             state.authenticating = false;
             state.user = null;
             state.error = '';
@@ -36,8 +36,7 @@ const authSlice = createSlice({
             state.authenticating = true;
             state.user = null;
             state.error = null;
-        },
-        getUserStart: (state) => {}
+        }
     }
 });
 

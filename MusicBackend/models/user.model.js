@@ -30,11 +30,18 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
+        validate: {
+            validator: password => {
+                return password.length > 6
+            },
+            message: 'Password must be longer than 7 characters'
+        }
     },
     role: {
         required: true,
         type: String,
-        enum: ['client', 'admin']
+        enum: ['client', 'admin'],
+        default: 'client'
     },
     playlists: [{
         type: PlayList,

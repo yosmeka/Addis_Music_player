@@ -7,6 +7,7 @@ function* signUpSaga(action) {
         const response = yield call(axios.post, 'user/register', action.payload);
         const {id, email, refreshToken, accessToken} = response.data.data;
         localStorage.setItem('token', refreshToken);
+        localStorage.setItem('accesstoken', accessToken);
         localStorage.setItem('id', id);
         axios.defaults.headers['Authorization'] = `Bearer ${accessToken}`
         yield put(authSuccess({id, email}));
@@ -20,7 +21,7 @@ function* loginSaga(action) {
         const response = yield call(axios.post, 'user/login', action.payload);
         const {id, email, refreshToken, accessToken} = response.data.data;
         localStorage.setItem('token', refreshToken);
-        localStorage.setItem('id', id);
+        localStorage.setItem('accesstoken', accessToken);
         axios.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
         yield put(authSuccess({id, email}));
     } catch (error) {
@@ -32,6 +33,7 @@ function* getUserSaga(action) {
     try {
         const id = action.payload;
         const response = yield call(axios.get, `user/${id}`);
+        // Send the right amount of information
         yield put(authSuccess(response.data.data));
     } catch (error) {
         yield put(authFailure(error));
@@ -45,7 +47,7 @@ function* logoutSaga(action) {
         yield call(axios.post, `user/${id}/logout`, {refreshtoken});
         localStorage.clear();
         axios.defaults.headers['Authorization'] = '';
-        yield put(logoutSuccess(true));
+        yield put(logoutSuccess());
     } catch(error) {
         yield put(logoutFailure(error));
     }
@@ -55,7 +57,6 @@ export function* watchAuth() {
     yield all([
         takeEvery(signUpStart.type, signUpSaga),
         takeEvery(loginStart.type, loginSaga),
-        takeEvery(getUserStart.type, getUserSaga),
         takeEvery(logout.type, logoutSaga)
     ]);
 }
