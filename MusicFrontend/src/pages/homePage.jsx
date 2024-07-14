@@ -1,10 +1,9 @@
 import { css } from '@emotion/react';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
     Flex,
     Heading,
     Box,
-    Button
   } from 'rebass'
 import MusicCard from '../components/musicCard';
 import StyledIcon from '../components/icons'
@@ -12,9 +11,9 @@ import { FaAngleRight, FaAngleLeft } from 'react-icons/fa6';
 import { MdOutlineAccountCircle } from "react-icons/md";
 import styled from '@emotion/styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserStart, logout, logoutSuccess } from '../redux/slices/authSlice';
+import { logout, logoutSuccess } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import axios from "../axiosUtils.js";
+import CustomToast from '../components/CustomToast.jsx';
 
 
 const hotMusicStyle = css`
@@ -92,6 +91,7 @@ const CheckBox = styled('input')`
 
 const ListItem = styled('ul')`
   padding: 1rem;
+  transition: background, padding 400ms ease-out;
   &:hover {
     background: #63676F;
     padding-left: 3px;
@@ -131,14 +131,15 @@ export function Home() {
     if (auth.loggedout) {
       setTimeout(() => {
         dispatch(logoutSuccess(false));
-      }, 1000);
+      }, 1500);
     }
   }, [auth.user, auth.loggedout]);
   
     
     return (
             <Flex flexDirection='column' ml={5} mr={3} my={1} width={1}>
-                <Box css={!auth.loggedout?notificationStyle:[notificationStyle, showNotification]}>Successfully Logged Out</Box>
+                {/* <Box css={!auth.loggedout?notificationStyle:[notificationStyle, showNotification]}>Successfully Logged Out</Box> */}
+                <CustomToast text={"Successfully logged out!"} display={auth.loggedout} background={'#57cd7b'}/>
                 <DropDown htmlFor='dropdown'>
                   <CheckBox type='checkbox' id='dropdown'/>
                   <StyledIcon icon={MdOutlineAccountCircle} width={15} margin={'0 5'} height={15}/> {auth?.user? auth.user.email: 'Account'} 

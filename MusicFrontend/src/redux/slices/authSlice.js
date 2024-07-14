@@ -4,6 +4,7 @@ const initialState = {
     authenticating: false,
     user: null,
     error: '',
+    loggedout: false
 }
 
 const authSlice = createSlice({
@@ -28,6 +29,7 @@ const authSlice = createSlice({
             state.authenticating = false;
             state.user = null;
             state.error = '';
+            state.loggedout = action.payload;
         },
         logoutFailure: (state, action) => {
             state.error = action.payload

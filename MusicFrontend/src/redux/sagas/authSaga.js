@@ -29,17 +29,6 @@ function* loginSaga(action) {
     }
 }
 
-function* getUserSaga(action) {
-    try {
-        const id = action.payload;
-        const response = yield call(axios.get, `user/${id}`);
-        // Send the right amount of information
-        yield put(authSuccess(response.data.data));
-    } catch (error) {
-        yield put(authFailure(error));
-    }
-}
-
 function* logoutSaga(action) {
     try {
         const id = action.payload;
@@ -47,7 +36,7 @@ function* logoutSaga(action) {
         yield call(axios.post, `user/${id}/logout`, {refreshtoken});
         localStorage.clear();
         axios.defaults.headers['Authorization'] = '';
-        yield put(logoutSuccess());
+        yield put(logoutSuccess(true));
     } catch(error) {
         yield put(logoutFailure(error));
     }

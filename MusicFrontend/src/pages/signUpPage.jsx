@@ -5,6 +5,7 @@ import { css }from '@emotion/react'
 import { useDispatch, useSelector } from "react-redux";
 import { signUpStart } from "../redux/slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import CustomToast from "../components/CustomToast";
 
 const InputField = styled('input')`
     border: none;
@@ -49,31 +50,27 @@ const errorStyle = css`
     transition: width 0.5s ease;
     border-radius: 3px 0 0 3px;
 `
-const displayError = (errorRef, msg, width) => {
-    if (!errorRef) return;
-    errorRef.style.width = width;
-    errorRef.innerText = msg;
-}
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function SignUpPage() 
 {
     const [signUpForm, setSignUpForm] = useState({email: '', password: '', cpassword: ''});
-    const [submitted, setSubmitted] = useState(false);
+    const [display, setdisplay] = useState(false);
     const navigate = useNavigate();
-    const errorBox = useRef(null);
     const dispatch = useDispatch();
     const auth = useSelector(state => state.auth);
-
-    if (submitted && auth.user) {
-        navigate("/")
-    }
+    
+    useEffect(() => {
+        if(auth.user) {
+            navigate('/');
+        }
+    }, [auth.user])
     
     const emailError = !emailRegex.test(signUpForm.email) && signUpForm.email !== '';
     const passwordError = signUpForm.password.length < 7 && signUpForm.password !== '';
     const confirm = signUpForm.password !== signUpForm.cpassword  && signUpForm.cpassword !== '';
 
-    let errMsg = ''
+    let errMsg = auth.error
     if (emailError) {
         errMsg = 'Invalid email format';
     } else if (passwordError) {
@@ -84,12 +81,9 @@ export function SignUpPage()
         errMsg = 'All fields must be filled in'
     }
 
-    if(auth.error !== '') {
-        displayError(errorBox.current, auth.error, '220px');
-    }
-
     const handleChange = (e) => {
-        displayError(errorBox.current, '', '0');
+        if (display)
+            setdisplay(false)
         const name = e.target.name;
         setSignUpForm({...signUpForm, [name]: e.target.value});
     }
@@ -98,7 +92,7 @@ export function SignUpPage()
         <Heading lineHeight={4} fontSize={25} fontWeight={550} mb={4}>
             Welcome to our music page
         </Heading>
-        <Box ref={errorBox} css={errorStyle}></Box>
+        <CustomToast text={errMsg} display={display} background={'#eb4c4c'}/>
         <Text lineHeight={2} fontFamily={'Arial sans-serif'} marginBottom={2}>
             <strong>Embark on a melodic journey with us! 🎶</strong> <br />
             Sign up now to unlock a world of rhythm, harmony, and endless tunes.  🎵✨
@@ -107,13 +101,8 @@ export function SignUpPage()
         <InputField type="password" name="password" error={passwordError} value={signUpForm.password} onChange={handleChange} placeholder="Type your password"/>
         <InputField type="password" name="cpassword" error={confirm} value={signUpForm.cpassword} onChange={handleChange} placeholder="Confirm password"/>
         <Button css={buttonStyle} onClick={() => {
-            if (errMsg === '') {
-                dispatch(signUpStart(signUpForm))
-                setSubmitted(true)
-                return
-            }
-
-            displayError(errorBox.current, errMsg, '220px');
+            dispatch(signUpStart(signUpForm));
+            setdisplay(true);
         }}> {auth.authenticating ? '...':"Sign Up"} </Button>
         <Text my={4}>
             Already have an account <CustomLink to='/login'>Login</CustomLink>
