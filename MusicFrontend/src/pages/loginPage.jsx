@@ -5,6 +5,7 @@ import { css }from '@emotion/react'
 import { useDispatch, useSelector } from "react-redux";
 import { loginStart } from "../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const InputField = styled('input')`
     border: none;
@@ -18,6 +19,12 @@ const InputField = styled('input')`
     font-size: 17px;
     border: ${props => props.error&& '1px solid red'}
 `
+
+const CustomLink = styled(Link)`
+    font-weight: bold;
+    color: #629ebb;
+`
+
 const buttonStyle = css`
     background: #363637;
     text-align: center;
@@ -113,5 +120,11 @@ export function LogInPage()
             }
             displayError(errorBox.current, errMsg, '220px');
         }}> {auth.authenticating ? '...':"Login"} </Button>
+        <Text my={4}>
+            Don't have an account <CustomLink to='/signup'>Sign up</CustomLink>
+        </Text>
+        <Button css={[buttonStyle, 'min-width: fit-content; padding: 3px 7px; align-self: end;']} onClick={() => navigate('/', {replace: true})}>
+            Back to home page
+        </Button>
     </Flex>)
 }

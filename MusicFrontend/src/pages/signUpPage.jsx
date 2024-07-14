@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { css }from '@emotion/react'
 import { useDispatch, useSelector } from "react-redux";
 import { signUpStart } from "../redux/slices/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const InputField = styled('input')`
     border: none;
@@ -31,6 +31,10 @@ const buttonStyle = css`
     &:hover {
         background: #63676F;
     }
+`
+const CustomLink = styled(Link)`
+    font-weight: bold;
+    color: #629ebb;
 `
 
 const errorStyle = css`
@@ -111,5 +115,11 @@ export function SignUpPage()
 
             displayError(errorBox.current, errMsg, '220px');
         }}> {auth.authenticating ? '...':"Sign Up"} </Button>
+        <Text my={4}>
+            Already have an account <CustomLink to='/login'>Login</CustomLink>
+        </Text>
+        <Button css={[buttonStyle, 'min-width: fit-content; padding: 3px 7px; align-self: end;']} onClick={() => navigate('/', {replace: true})}>
+            Back to home page
+        </Button>
     </Flex>)
 }
