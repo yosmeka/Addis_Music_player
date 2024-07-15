@@ -26,7 +26,7 @@ const CategoriesCard = styled(Card)`
     min-width: 25px;
     min-height: 10px;
     border-radius: 10px;
-    padding: 1px 5px;
+    padding: 2px 5px;
     margin: 5px;
     font-size: small;
 `
@@ -40,6 +40,8 @@ const PlayButton = styled(FaPlay)`
     width: 30px;
     height: 30px;
     border-radius: 50%;
+    cursor: pointer;
+    z-index: 100;
     &>*{
         color: black;
     }
@@ -64,10 +66,17 @@ const blurStyle = css`
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
 `
+const categoriesToColor = new Map();
+categoriesToColor.set('jazz', '#ff3030');
+categoriesToColor.set('hiphop', '#3939f1');
+categoriesToColor.set('slow', '#2f851f');
+categoriesToColor.set('rock', '#856c12');
+categoriesToColor.set('sad', '#7f3fc5');
+categoriesToColor.set('happy', '#3939f1');
 
-const MusicCard = ( {hotMusic, imageUrl} ) => {
+const MusicCard = ( {hotMusic, imageUrl, title, audio, album, categories, artist} ) => {
     const dispatch = useDispatch();
-
+    console.log(audio.url)
     return <Card
             display='flex'
             flexDirection='column'
@@ -88,25 +97,26 @@ const MusicCard = ( {hotMusic, imageUrl} ) => {
             }}>
 
                 {hotMusic && <Box css={blurStyle} />}
-                <PlayButton onClick={() => dispatch(play({audio: 'there'}))}/>
+                <PlayButton onClick={() => {console.log('Clicked');dispatch(play({
+                    audio: 'http://localhost:3000/'+audio.url,
+                    artist: artist.name,
+                    title: title,
+                    image: imageUrl
+                }))}}/>
                 <Heading as='h3' my={1}>
-                    Nice Music
+                    {title}
                 </Heading>
 
                 <Text fontSize={13} my={1}>
-                    By: Artist Name
+                    By: {artist.name}
                 </Text>
 
                 <Flex justifyContent="space-around" flexWrap='wrap' alignItems='center' width={1} flexGrow={1} height='50%'>
-                    <CategoriesCard backgroundColor='red'>
-                        Sad Music
-                    </CategoriesCard>
-                    <CategoriesCard backgroundColor='red'>
-                        Hiphop
-                    </CategoriesCard>
-                    <CategoriesCard backgroundColor='blue'>
-                        Jazz
-                    </CategoriesCard>
+                    {categories.map(category => 
+                        <CategoriesCard backgroundColor={categoriesToColor.get(category)}>
+                            {category.toUpperCase()}
+                        </CategoriesCard>
+                    )}
                 </Flex>
             </Box>
         </Card>

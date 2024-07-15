@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout, logoutSuccess } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import CustomToast from '../components/CustomToast.jsx';
+import { getMusicStart } from '../redux/slices/musicSlice.js';
 
 
 const hotMusicStyle = css`
@@ -125,9 +126,11 @@ export function Home() {
   const hotMusics = useRef(null);
   const dispatch = useDispatch();
   const auth = useSelector(state => state.auth);
+  const musicSlice = useSelector(state => state.musics);
   const navigate = useNavigate();
 
   useEffect(() => {
+    dispatch(getMusicStart());
     if (auth.loggedout) {
       setTimeout(() => {
         dispatch(logoutSuccess(false));
@@ -167,14 +170,10 @@ export function Home() {
                 </Box>
                 </Flex>
                 <Flex overflowX='scroll' ref={hotMusics} overflowY='hidden' ml={2} mt={2} mb={3} height={300} css={hotMusicStyle}>
-                    <MusicCard hotMusic imageUrl='images/icons8-close-50.png'/>
-                    <MusicCard hotMusic imageUrl='images/music.jpg'/>
-                    <MusicCard hotMusic imageUrl='images/download.jpg'/>
-                    <MusicCard hotMusic imageUrl='images/music.jpg'/>
-                    <MusicCard hotMusic imageUrl='images/download.jpg'/>
-                    <MusicCard hotMusic imageUrl='images/music.jpg'/>
-                    <MusicCard hotMusic imageUrl='images/download.jpg'/>
-                    <MusicCard hotMusic imageUrl='images/music.jpg'/>
+                    {musicSlice.musics.map(({title, coverImg, categories, _id, audio, album, artist}) => 
+                      <MusicCard hotMusic imageUrl={'http://localhost:3000/'+coverImg.url} title={title} categories={categories} key={_id} audio={audio} album={album} artist={artist}/>
+                    )}
+                    {/* <MusicCard hotMusic imageUrl='images/icons8-close-50.png'/> */}
                 </Flex>
 
                 <Flex py={1} justifyContent={"space-between"}>
@@ -184,14 +183,9 @@ export function Home() {
                   <SearchInput placeholder='Search '/>
                 </Flex>
                 <Flex flexWrap='wrap' justifyContent='space-around' css={{gap: '10px'}}>
-                    <MusicCard imageUrl='images/icons8-close-50.png' />
-                    <MusicCard imageUrl='images/download.jpg' />
-                    <MusicCard imageUrl='images/download.jpg' />
-                    <MusicCard imageUrl='images/music.jpg'/>
-                    <MusicCard imageUrl='images/music.jpg'/>
-                    <MusicCard imageUrl='images/music.jpg'/>
-                    <MusicCard imageUrl='images/music.jpg'/>
-                    <MusicCard imageUrl='images/music.jpg'/>
+                    {musicSlice.musics.map(({title, coverImg, categories, _id, audio, album, artist}) => 
+                      <MusicCard imageUrl={'http://localhost:3000/'+coverImg.url} title={title} categories={categories} key={_id} audio={audio} album={album} artist={artist}/>
+                    )}
                 </Flex>
                 {/* Vertical Padding */}
                 <Box width={1} height={80}/>

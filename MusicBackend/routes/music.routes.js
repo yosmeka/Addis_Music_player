@@ -10,7 +10,7 @@ import {verifyToken} from '../utils/verifyToken.js';
 
 const router = express.Router();
 
-// Create Music
+
 router.post('/',verifyToken, createMusic);
 router.get('/', allMusics);
 router.get('/:id', singleMusic);

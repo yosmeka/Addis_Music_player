@@ -39,16 +39,8 @@ export const createMusic = async (req, res, next) => {
             categories: categories,
             ...files
         });
-        const response = {
-            ...newMusic._doc,
-            audio: {
-                url: files['audio.url']
-            },
-            coverImg: {
-                url: files['coverImg.url'] || ''
-            }
-        };
-        return res.status(201).json({message: 'Music created successfully', data: response});
+        
+        return res.status(201).json({message: 'Music created successfully', data: newMusic});
     } catch (error) {
         console.error(error);
         res.status(500).json({status: 500, message: 'Internal server error during music creation.'});
@@ -68,7 +60,7 @@ export const allMusics = async (req, res, next) => {
 export const singleMusic = async (req, res, next) => {
     try {
         const music = await Music.findById(req.params.id).select('-coverImg.path -audio.path').populate('artist');
-        if (!music) 
+        if (!music)
             return res.status(404).json(createError(404, 'Music not found.'));
         res.status(200).json({message: 'Successfully retrieved', music});
         
@@ -86,7 +78,7 @@ export const updateMusic = async (req, res, next) => {
         const {image, music} = req.files;
         categories = JSON.parse(categories);
         categories.map(category => category.trim().toLowerCase());
-                
+
         const musicdata = await Music.findById(req.params.id);
         if (artist && !await Artist.exists({id: artist}))
             artist = musicdata.artist

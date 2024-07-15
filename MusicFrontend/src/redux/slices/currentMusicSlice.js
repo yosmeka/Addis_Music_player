@@ -10,6 +10,7 @@ const currentMusicSlice = createSlice({
     initialState,
     reducers: {
         play: (state, action) => {
+            console.log('herre;', action)
             state.music = action.payload;
         },
         loop: (state) => {

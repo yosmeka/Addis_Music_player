@@ -77,7 +77,7 @@ const SeekRange = styled.input`
         opacity: 1 !important;
         right: 0;
         margin: 4px;
-        font-size; 5px;
+        font-size: 5px;
     }
     
 `
@@ -124,7 +124,7 @@ const changeTimeFormat = (time) => Math.floor(time/60) + ':' + (time%60<=9?'0':'
 
 const PlayingMusic = () => {
     const [range, setRange] = useState(0);
-    const [playing, setPlaying] = useState(true);
+    const [playing, setPlaying] = useState(false);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(90);
     const currentMusic = useSelector(state => state.currentMusic);
@@ -146,7 +146,7 @@ const PlayingMusic = () => {
             <Image width={64} src={currentMusic.music.image}/>
             <Flex flexDirection='column' paddingLeft={2}>
                 <Text fontSize={15} mb={1}> {currentMusic.music.title} </Text>
-                <Text fontSize={10} color='#FCFCFC77'> {currentMusic.music.artist.name} </Text>
+                <Text fontSize={10} color='#FCFCFC77'> {currentMusic.music.artist} </Text>
             </Flex>
         </Flex>
         <Flex paddingLeft={10}>
@@ -180,6 +180,7 @@ const PlayingMusic = () => {
             src={currentMusic.music.audio} 
             onLoadedMetadata={(e) => setDuration(e.target.duration)} 
             onTimeUpdate={onTimeUpdated}
+            autoPlay={true}
             onEnded={() => setPlaying(true)}
         ></audio>
         <FaX onClick={() => dispatch(play(null))}/>

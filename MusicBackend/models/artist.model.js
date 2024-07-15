@@ -18,5 +18,13 @@ const ArtistSchema = new mongoose.Schema({
     }
 });
 
+ArtistSchema.methods.toJSON = function() {
+    const artist = this.toObject();
+    delete artist.photo.path;
+    return artist;
+};
+
 const Artist =  mongoose.model('Artist', ArtistSchema);
+
+
 export default Artist;

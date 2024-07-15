@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import currentMusicReducer from './currentMusicSlice';
 import authReducer from './authSlice';
 import playListReducer from './playListSlice';
+import musicReducer from './musicSlice';
 
 const authPersistConfig = {
   key: 'auth',
@@ -15,7 +16,8 @@ const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 const rootReducer = combineReducers({
   currentMusic: currentMusicReducer,
   auth: persistedAuthReducer,
-  playlist: playListReducer
+  playlist: playListReducer,
+  musics: musicReducer,
 });
 
 export default rootReducer;

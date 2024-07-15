@@ -51,4 +51,11 @@ MusicSchema.pre('save', function(next) {
 
 const Music = mongoose.model('Music', MusicSchema);
 
+MusicSchema.methods.toJSON = function() {
+  const music = this.toObject();
+  delete music.audio.path;
+  delete music.coverImg.path;
+  return music;
+};
+
 export default Music;
