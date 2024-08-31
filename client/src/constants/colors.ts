@@ -1,0 +1,10 @@
+export const primaryColor = '#14b8a6'; // Main color
+export const backgroundColor = '#038173'; // Soft background color
+export const textColor = '#05386B'; // Consistent text color
+export const secondaryColor = '#EDF5E1'; // Secondary color for contrast
+export const sidebarBackgroundColor = '#8EE4AF'; // Sidebar background color
+export const sidebarItemBackgroundColor = '#05386B'; // Sidebar item background color
+export const sidebarItemHoverColor = '#5CDB95'; // Hover color for sidebar items
+export const sidebarItemActiveColor = '#379683'; // Active color for sidebar items
+export const buttonBackgroundColor = '#05386B'; // Background color for buttons
+export const buttonHoverColor = '#303030'; // Hover color for buttons

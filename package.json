@@ -1,0 +1,12 @@
+{
+  "name": "music-player",
+  "version": "1.0.0",
+  "description": "<h2 align=\"center\">\r   HarmoniSync Music Player<br/>\r   <a href=\"https://6555cede0030205533b7930c--preeminent-chaja-5f2e87.netlify.app/\" target=\"_blank\">Demo</a>\r </h2>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
